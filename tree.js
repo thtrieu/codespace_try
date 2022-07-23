@@ -17,19 +17,6 @@ function randomInt(min, max) {
 }
 
 
-
-class Tree {
-  constructor(img, w=50, h=100) {
-    this.img = img;
-    w = img.width * h / img.height;
-    let r = randomUniform(0.8, 1.75);
-    this.w = w * r
-    this.h = h * r
-  }
-}
-
-
-
 const _PRESETS = [
   {
     axiom: 'F',
@@ -100,7 +87,7 @@ function _RouletteSelection(rules) {
 
 
 class TreeAuto {
-  constructor() {
+  constructor(x, y, w) {
     let preset = randomChoice(_PRESETS)
     this._axiom = preset.axiom;
     this._rules = preset.rules;
@@ -110,6 +97,11 @@ class TreeAuto {
     this.age = 0;
     this.upper = 1
     this.fruit = {}
+
+    this.x = x
+    this.y = y
+    this.w = w
+    
     this.fx = randomFloat(-0.3, 0.3)
     this.fy = randomFloat(-0.3, 0.3)
     
@@ -212,7 +204,7 @@ class TreeAuto {
     ctx.resetTransform();
     // ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    ctx.transform(1, 0, 0, 1, x, y);
+    ctx.transform(1, 0, 0, 1, x*2, y*2);
 
     const stateStack = [];
     let state = {width: this._branchWidth};
@@ -240,22 +232,9 @@ class TreeAuto {
         const w2 = state.width;
         const l = params.branchLength;
 
-        // ctx.beginPath();
-        // ctx.moveTo(-w2 / 2, -l - 1);
-        // ctx.lineTo(-w1 / 2, 1);
-        // ctx.lineTo(w1 / 2, 1);
-        // ctx.lineTo(w2 / 2, -l - 1);
-        // ctx.lineTo(-w2 / 2, -l - 1);
-        // ctx.closePath();
-        // ctx.fill();
-        
-        // fill(this._branchColor)
         fill(this._branchColor)
-        // quad(0, 0, 0, -l, -w1, -l, -w1, 0)
-        // quad(2, 0, 1, -l, -1, -l, -2, 0)
         noStroke();
         quad(w1/2, 0, w2/2, -l, -w2/2, -l, -w1/2, 0)
-        // quad(-w2/2, l, -w1/2, 0, w1/2, l, w2/2, 0)
 
         ctx.transform(1, 0, 0, 1, 0, -l);
       } else if (c == '+') {
@@ -267,9 +246,6 @@ class TreeAuto {
       } else if (c == '[') {
         ctx.save();
         stateStack.push({...state});
-        // console.log(state.width);
-        // console.log({...state});
-        // return
       } else if (c == ']') {
         ctx.fillStyle = this._leafColor;
         ctx.strokeStyle = this._leafColor;
@@ -287,14 +263,6 @@ class TreeAuto {
           ctx.scale(leafWidth, leafLength);
           if (this._leafType == 0) {
             ctx.beginPath();
-            // ctx.moveTo(0, 0);
-            // ctx.lineTo(1, -1);
-            // ctx.lineTo(0, -4);
-            // ctx.lineTo(-1, -1);
-            // ctx.lineTo(0, 0);
-            // ctx.closePath();
-            // ctx.fill();
-            // ctx.stroke();
             quad(0, 0, 1, -1, 0, -4, -1, -1);
           } else if (this._leafType == 1) {
             ctx.beginPath();
