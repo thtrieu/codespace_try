@@ -87,7 +87,7 @@ function _RouletteSelection(rules) {
 
 
 class TreeAuto {
-  constructor(x, y, w) {
+  constructor(x, y, w, i, j) {
     let preset = randomChoice(_PRESETS)
     this._axiom = preset.axiom;
     this._rules = preset.rules;
@@ -98,9 +98,9 @@ class TreeAuto {
     this.upper = 1
     this.fruit = {}
 
-    this.x = x
+    this.x = x + i * w + randomFloat(-0.3, 0.3) * w + w/2
     this.y = y
-    this.w = w
+    this.j = j
     
     this.fx = randomFloat(-0.3, 0.3)
     this.fy = randomFloat(-0.3, 0.3)
@@ -198,12 +198,15 @@ class TreeAuto {
     }
   }
   
-  Render(x, y) {
+  Render(s, h) {
     const canvas = document.getElementById('defaultCanvas0');
     const ctx = canvas.getContext('2d');
     ctx.resetTransform();
     // ctx.clearRect(0, 0, canvas.width, canvas.height);
     
+    let x = this.x + this.j*s + s/2
+    let y = this.y + this.j*h + h/2 + this.fy * h
+
     ctx.transform(1, 0, 0, 1, x*2, y*2);
 
     const stateStack = [];

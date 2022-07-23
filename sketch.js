@@ -30,7 +30,7 @@ function setup() {
   for (j = -nh; j < nh+1; j++) {
     tree_row = []
     for (i = -nw; i < nw+1; i++) { 
-      tree_row.push(new Bundle())
+      tree_row.push(new Bundle(centerx, centery, w, i, j));
     }
     tree_mat.push(tree_row)
   }
@@ -46,8 +46,9 @@ function mouseClicked() {
     for (i = -nw; i < nw+1; i++) {
       x = centerx + i*w + j*s
       y = centery + j*h
-      if (tree_mat[i+nh][j+nh].inside(x, y, w, s, h)) {
-        tree_mat[i+nh][j+nh].tag();
+      let bundle = tree_mat[i+nw][j+nh];
+      if (bundle.cell.inside(s, h)) {
+        bundle.createTextBox();
       }
     }
   }
@@ -56,18 +57,19 @@ function mouseClicked() {
 
 let dragging = false;
 let xsave, ysave;
+let ssave, hsave;
 
 
 function mousePressed() {
   xsave = mouseX;
   ysave = mouseY;
+  ssave = s;
+  hsave = h;
   dragging = true;
 }
 
 
 function mouseReleased() {
-  h = h1;
-  s = s1;
   dragging = false;
 }
 
@@ -82,27 +84,23 @@ function draw() {
   maxdX = 50
   
   if (dragging) {
-    h1 = h + (mouseY - ysave)*(maxdY-mindY)/height
-    s1 = s + (mouseX - xsave)*(maxdX-mindX)/width
+    h = hsave + (mouseY - ysave)*(maxdY-mindY)/height
+    s = ssave + (mouseX - xsave)*(maxdX-mindX)/width
+    h = min(max(h, mindY), maxdY)
+    s = min(max(s, mindX), maxdX)
   }
   
-  h1 = min(max(h1, mindY), maxdY)
-  s1 = min(max(s1, mindX), maxdX)
   
   for (j = -nh; j < nh+1; j++) {   
     for (i = -nw; i < nw+1; i++) {
-      x = centerx + i*w + j*s1
-      y = centery + j*h1
-      tree_mat[i+nw][j+nh].cell.render(x, y, w, s1, h1);
+      tree_mat[i+nw][j+nh].cell.render(s, h);
     }
   }
 
   for (j = -nh; j < nh+1; j++) {   
     for (i = -nw; i < nw+1; i++) {
       let tree = tree_mat[i+nw][j+nh].tree;
-      x = centerx + i*w + j*s1 + (w+s1)/2 + tree.fx * w
-      y = centery + j*h1 + h1/2 + tree.fy * h1
-      tree.Render(x, y);
+      tree.Render(s, h);
     }
   }
 }
