@@ -25,7 +25,7 @@ function setup() {
   nw = 1
 
   centerx = width/2 - w/2;
-  centery = height/2;
+  centery = height*3/4;
   
   for (j = -nh; j < nh+1; j++) {
     tree_row = []
