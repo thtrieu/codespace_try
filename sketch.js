@@ -107,6 +107,9 @@ function draw() {
     }
     if (trees[i].tree.position != null) {
       trees[i].txtbox.render();
+      if (trees[i].txtbox.focused) {
+        trees[i].tree.showTag(s, h);
+      }
     }
   }
 

@@ -78,11 +78,18 @@ class textBox {
     let y = (9-position) * 50
 
     
-    txtbox.position(x, y);
-    txtbox.size(width-x-20, 30);
+    txtbox.position(x+150, y);
+    txtbox.size(width-x-300, 30);
+
+    txtbox.elt.onfocus = () => {
+      this.focused = true
+    }
+    txtbox.elt.onblur = () => {
+      this.focused = false
+    }
     
-    this.position = position;
     this.txtbox = txtbox;
+    this.position = position;
     this.x = x
     this.y = y
     this.w = 80
@@ -96,7 +103,7 @@ class textBox {
 
   render() {
     fill('black')
-    text(this.name, 20, this.y+25)
+    text(this.name, 100, this.y+25)
   }
   
   commit() {

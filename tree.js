@@ -156,14 +156,19 @@ class TreeAuto {
     if (this.position == null) {
       return
     }
-    this.showTag(s, h, 'white')
+    this.showTag(s, h, false)
   }
 
-  showTag(s, h, color='black') {
+  showTag(s, h, withStroke=true) {
     let x, y;
     [x, y] = this.get_xy(s, h)
+    if (withStroke) {
+      stroke(color(255, 0, 0, 50))
+      strokeWeight(5)
+    } else {
+      noStroke()
+    }
     fill('white');
-    stroke(color)
     ellipse(x, y, 50, h/2);
     noStroke()
     if (this.position == null) return;
