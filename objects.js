@@ -53,7 +53,7 @@ class Cell {
     // if (this.inside(s, h)) {
     //   fill('yellow');
     // } else {
-    fill('lightgrey');
+    fill(color(70, 70, 70));
     // }
 
     quad(x, y,
@@ -103,8 +103,8 @@ class textBox {
 
   render() {
     if (this.focused) {
-      stroke(color(0, 0, 255, 50))
-      strokeWeight(5)
+      stroke(color(255, 255, 255, 80))
+      strokeWeight(10)
     }
     fill('white')
     textSize(30)

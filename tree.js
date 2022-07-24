@@ -163,17 +163,17 @@ class TreeAuto {
     let x, y;
     [x, y] = this.get_xy(s, h)
     if (withStroke) {
-      stroke(color(0, 0, 255, 50))
+      stroke(color(255, 255, 255, 50))
       strokeWeight(5)
     } else {
       noStroke()
     }
-    fill('white');
+    fill('black');
     ellipse(x, y, 50, h/2);
     noStroke()
     if (this.position == null) return;
 
-    fill('black')
+    fill('white')
     textSize(20)
     text(str(this.position), x-20, y);
   }
@@ -282,15 +282,16 @@ class TreeAuto {
         noStroke();
         quad(w1/2, 0, w2/2, -l, -w2/2, -l, -w1/2, 0)
 
-        ctx.transform(1, 0, 0, 1, 0, -l);
+        // ctx.transform(1, 0, 0, 1, 0, 0);
+        translate(0, -l)
       } else if (c == '+') {
         const a = params.angle;
-        ctx.rotate(a * Math.PI / 180);
+        rotate(a * Math.PI / 180);
       } else if (c == '-') {
         const a = params.angle;
-        ctx.rotate(-a * Math.PI / 180);
+        rotate(-a * Math.PI / 180);
       } else if (c == '[') {
-        ctx.save();
+        push();
         stateStack.push({...state});
       } else if (c == ']') {
         ctx.fillStyle = this._leafColor;
@@ -298,7 +299,7 @@ class TreeAuto {
         ctx.globalAlpha = this._leafAlpha;
 
         const _DrawLeaf = () => {
-          ctx.save();
+          push();
 
           const leafWidth = randomFloat(
               this._leafWidth * (1 - this._variability),
@@ -308,7 +309,7 @@ class TreeAuto {
               this._leafLength * (1 + this._variability));
           ctx.scale(leafWidth, leafLength);
           if (this._leafType == 0) {
-            ctx.beginPath();
+            // ctx.beginPath();
             quad(0, 0, 1, -1, 0, -4, -1, -1);
           } else if (this._leafType == 1) {
             ctx.beginPath();
@@ -331,7 +332,7 @@ class TreeAuto {
   
             ctx.fillRect(0, 0, 0.25, -5);
           }
-          ctx.restore();
+          pop();
         }
 
         if (this.age == 3 && this.upper >= this._sentence.length && !(str(i) in this.fruit)) {
@@ -353,24 +354,25 @@ class TreeAuto {
         
         
           if (this._leafRepeat > 1) {
-            ctx.save();
+            push();
             for (let r = 0; r < this._leafRepeat; r++) {
               ctx.rotate((r + 1) * 5 * Math.PI / 180);
               _DrawLeaf();
             }
-            ctx.restore();
-            ctx.save();
+            pop()
+            push()
             for (let r = 0; r < this._leafRepeat; r++) {
               ctx.rotate(-(r + 1) * 5 * Math.PI / 180);
               _DrawLeaf();
             }
-            ctx.restore();
+            pop();
           }  
         }
 
-        ctx.restore();
+        pop();
         state = stateStack.pop();
       }
     }
+    ctx.resetTransform();
   }
 }
