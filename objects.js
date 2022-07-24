@@ -102,7 +102,12 @@ class textBox {
   }
 
   render() {
-    fill('black')
+    if (this.focused) {
+      stroke(color(0, 0, 255, 50))
+      strokeWeight(5)
+    }
+    fill('white')
+    textSize(30)
     text(this.name, 100, this.y+25)
   }
   

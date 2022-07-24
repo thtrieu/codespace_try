@@ -163,7 +163,7 @@ class TreeAuto {
     let x, y;
     [x, y] = this.get_xy(s, h)
     if (withStroke) {
-      stroke(color(255, 0, 0, 50))
+      stroke(color(0, 0, 255, 50))
       strokeWeight(5)
     } else {
       noStroke()
