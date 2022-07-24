@@ -1,8 +1,9 @@
 let w, h, s, nw, nh;
 let h1, s1;
-let tree_mat = [];
-
+let trees = [];
 let centerx, centery;
+
+let spaces = [];
 
 
 function preload() {
@@ -10,7 +11,7 @@ function preload() {
 
 
 function setup() {
-  canvas = createCanvas(500, 1000);
+  canvas = createCanvas(1000, 1000);
 
   w = 150
   h = 30
@@ -28,29 +29,22 @@ function setup() {
   centery = height*3/4;
   
   for (j = -nh; j < nh+1; j++) {
-    tree_row = []
     for (i = -nw; i < nw+1; i++) { 
-      tree_row.push(new Bundle(centerx, centery, w, i, j));
+      trees.push(new Bundle(centerx, centery, w, i, j));
+      spaces.push(true);
     }
-    tree_mat.push(tree_row)
-  }
-  
+  }  
   frameRate(15)
 }
 
 
-
-
 function mouseClicked() {
-  for (j = -nh; j < nh+1; j++) {   
-    for (i = -nw; i < nw+1; i++) {
-      x = centerx + i*w + j*s
-      y = centery + j*h
-      let bundle = tree_mat[i+nw][j+nh];
-      if (bundle.cell.inside(s, h)) {
-        bundle.createTextBox();
-      }
-    }
+
+  for (let i = 0; i < trees.length; ++i) {
+    let bundle = trees[i];
+    if (bundle.cell.inside(s, h)) {
+      bundle.createTextBox(spaces)
+    } 
   }
 }
 
@@ -74,14 +68,22 @@ function mouseReleased() {
 }
 
 
+function keyPressed() {
+  if (keyCode != ENTER) return;
+  
+  for (let i = 0; i < trees.length; ++i) {
+    trees[i].commit();
+  }
+}
+
+
 function draw() {
   background('white');
-  
 
   mindY = 0
   maxdY = 40
-  mindX = -50
-  maxdX = 50
+  mindX = -100
+  maxdX = 100
   
   if (dragging) {
     h = hsave + (mouseY - ysave)*(maxdY-mindY)/height
@@ -91,16 +93,24 @@ function draw() {
   }
   
   
-  for (j = -nh; j < nh+1; j++) {   
-    for (i = -nw; i < nw+1; i++) {
-      tree_mat[i+nw][j+nh].cell.render(s, h);
+  for (let i = 0; i < trees.length; ++i) {
+    trees[i].cell.render(s, h);
+    trees[i].tree.showIfTag(s, h);
+  }
+  
+  for (let i = 0; i < trees.length; ++i) {
+    if (trees[i].cell.inside(s, h)) {
+      trees[i].tree.showTag(s, h)
+      if (trees[i].tree.position != null) {
+        trees[i].txtbox.focus();
+      }
+    }
+    if (trees[i].tree.position != null) {
+      trees[i].txtbox.render();
     }
   }
 
-  for (j = -nh; j < nh+1; j++) {   
-    for (i = -nw; i < nw+1; i++) {
-      let tree = tree_mat[i+nw][j+nh].tree;
-      tree.Render(s, h);
-    }
+  for (let i = 0; i < trees.length; ++i) {
+    trees[i].tree.Render(s, h);
   }
 }

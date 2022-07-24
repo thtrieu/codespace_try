@@ -8,7 +8,7 @@ class Bundle {
     name = str(objects.length)
     this.tree = new TreeAuto(x, y, w, i, j)
     this.cell = new Cell(x, y, w, i, j);
-    // this.txtbox = new textBox();
+    this.txtbox = null;
   }
 
   inside(s, h) {
@@ -16,11 +16,25 @@ class Bundle {
   }
   
   commit() {
+    if (!this.txtbox) {
+      return;
+    }
     this.txtbox.commit();
   }
 
-  createTextBox() {
-    this.txtbox = new textBox();
+  createTextBox(spaces) {
+    if (!this.txtbox) {
+      let position = spaces.indexOf(true);
+      this.txtbox = new textBox(position+1);
+      spaces[position] = false;
+      this.tree.tag(position+1)
+
+    } else {
+      this.txtbox.txtbox.remove()
+      spaces[this.txtbox.position-1] = true;
+      this.txtbox = null
+      this.tree.removeTag()
+    }
   }
 }
 
@@ -36,11 +50,11 @@ class Cell {
   render(s, h) {
     let x = this.x + this.j*s
     let y = this.y + this.j*h
-    if (this.inside(s, h)) {
-      fill('yellow');
-    } else {
-      fill('lightgrey');
-    }
+    // if (this.inside(s, h)) {
+    //   fill('yellow');
+    // } else {
+    fill('lightgrey');
+    // }
 
     quad(x, y,
          x+w, y,
@@ -58,26 +72,31 @@ class Cell {
 }
 
 class textBox {
-  constructor(name) {
+  constructor(position) {
     let txtbox = createInput();
-    
     let x = 40
-    let y = objects.length * 30
+    let y = (9-position) * 50
 
     
     txtbox.position(x, y);
     txtbox.size(width-x-20, 30);
     
+    this.position = position;
     this.txtbox = txtbox;
     this.x = x
     this.y = y
     this.w = 80
     this.h = 30
-    this.name = name
+    this.name = str(position)
+  }
+
+  focus() {
+    this.txtbox.elt.focus()
   }
 
   render() {
-    text(this.name, 15, this.y+15)
+    fill('black')
+    text(this.name, 20, this.y+25)
   }
   
   commit() {

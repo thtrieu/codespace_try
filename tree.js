@@ -91,6 +91,7 @@ class TreeAuto {
     let preset = randomChoice(_PRESETS)
     this._axiom = preset.axiom;
     this._rules = preset.rules;
+    this.position = null
     
     let d = new Date();
     this.tick = d.getTime();
@@ -135,6 +136,41 @@ class TreeAuto {
     // this._branchLengthFalloff = 0.75;
     
     this._ApplyRules();
+  }
+
+  tag(position) {
+    this.position = position
+  }
+
+  removeTag() {
+    this.position = null
+  }
+
+  get_xy(s, h) {
+    let x = this.x + this.j*s + s/2
+    let y = this.y + this.j*h + h/2 + this.fy * h
+    return [x, y]
+  }
+
+  showIfTag(s, h) {
+    if (this.position == null) {
+      return
+    }
+    this.showTag(s, h, 'white')
+  }
+
+  showTag(s, h, color='black') {
+    let x, y;
+    [x, y] = this.get_xy(s, h)
+    fill('white');
+    stroke(color)
+    ellipse(x, y, 50, h/2);
+    noStroke()
+    if (this.position == null) return;
+
+    fill('black')
+    textSize(20)
+    text(str(this.position), x-20, y);
   }
   
   log_config() {
@@ -204,10 +240,12 @@ class TreeAuto {
     ctx.resetTransform();
     // ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    let x = this.x + this.j*s + s/2
-    let y = this.y + this.j*h + h/2 + this.fy * h
+    let x, y;
+    [x, y] = this.get_xy(s, h)
+    x = x*2
+    y = y*2
 
-    ctx.transform(1, 0, 0, 1, x*2, y*2);
+    ctx.transform(1, 0, 0, 1, x, y);
 
     const stateStack = [];
     let state = {width: this._branchWidth};
