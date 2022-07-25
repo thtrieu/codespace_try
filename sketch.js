@@ -128,6 +128,7 @@ function draw() {
   for (let i = 0; i < trees.length; ++i) {
     trees[i].cell.render(s, h);
     trees[i].tree.showIfTag(s, h);
+    // trees[i].tree.Render(s, h);
   }
   
   for (let i = 0; i < trees.length; ++i) {
@@ -153,6 +154,6 @@ function draw() {
   // reset()
   // pop()
   // push()
-  lightray()
-  pop()
+  // lightray()
+  // pop()
 }
